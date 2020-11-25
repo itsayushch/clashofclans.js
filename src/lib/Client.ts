@@ -118,8 +118,8 @@ export class Client {
 		}
 
 		return {
-			seasonEnd: end,
 			seasonStart: start,
+			seasonEnd: end,
 			seasonId: end.toISOString().substring(0, 7)
 		};
 	}
