@@ -23,7 +23,8 @@ export class Events extends EventEmitter {
 	private activeToken = 0;
 	private queue: AsyncQueue = new AsyncQueue();
 
-	private isInMaintenance = false;
+	private isInMaintenance = Boolean(false);
+	private initialized = Boolean(false);
 
 	public constructor(options: EventsOption) {
 		super();
@@ -38,16 +39,16 @@ export class Events extends EventEmitter {
 
 	public addPlayers(tags: string | string[]) {
 		const list = Array.isArray(tags) ? tags : [tags];
-		list.forEach(_tag => {
-			const tag = validateTag(_tag);
+		list.forEach(msg => {
+			const tag = validateTag(msg);
 			if (tag && !this.players.has(tag)) this.players.set(tag, {});
 		});
 	}
 
 	public removePlayers(tags: string | string[]) {
 		const list = Array.isArray(tags) ? tags : [tags];
-		list.forEach(_tag => {
-			const tag = validateTag(_tag);
+		list.forEach(msg => {
+			const tag = validateTag(msg);
 			if (tag && this.players.has(tag)) this.players.delete(tag);
 		});
 	}
@@ -58,16 +59,16 @@ export class Events extends EventEmitter {
 
 	public addClans(tags: string | string[]) {
 		const list = Array.isArray(tags) ? tags : [tags];
-		list.forEach(_tag => {
-			const tag = validateTag(_tag);
+		list.forEach(msg => {
+			const tag = validateTag(msg);
 			if (tag && !this.clans.has(tag)) this.clans.set(tag, {});
 		});
 	}
 
 	public removeClans(tags: string | string[]) {
 		const list = Array.isArray(tags) ? tags : [tags];
-		list.forEach(_tag => {
-			const tag = validateTag(_tag);
+		list.forEach(msg => {
+			const tag = validateTag(msg);
 			if (tag && this.clans.has(tag)) this.clans.delete(tag);
 		});
 	}
@@ -78,16 +79,16 @@ export class Events extends EventEmitter {
 
 	public addWars(tags: string | string[]) {
 		const list = Array.isArray(tags) ? tags : [tags];
-		list.forEach(_tag => {
-			const tag = validateTag(_tag);
+		list.forEach(msg => {
+			const tag = validateTag(msg);
 			if (tag && !this.wars.has(tag)) this.wars.set(tag, {});
 		});
 	}
 
 	public removeWars(tags: string | string[]) {
 		const list = Array.isArray(tags) ? tags : [tags];
-		list.forEach(_tag => {
-			const tag = validateTag(_tag);
+		list.forEach(msg => {
+			const tag = validateTag(msg);
 			if (tag && this.wars.has(tag)) this.wars.delete(tag);
 		});
 	}
@@ -97,11 +98,13 @@ export class Events extends EventEmitter {
 	}
 
 	public init() {
+		if (this.initialized) return;
+		this.initialized = Boolean(true);
 		return Promise.allSettled([
-			this.checkMaintenace(),
-			this.initPlayerEvents(),
+			this.initWarEvents(),
 			this.initClanEvents(),
-			this.initWarEvents()
+			this.checkMaintenace(),
+			this.initPlayerEvents()
 		]);
 	}
 
@@ -148,10 +151,10 @@ export class Events extends EventEmitter {
 	private async checkMaintenace() {
 		const data = await this.fetch(`/clans?limit=1&minMembers=${Math.floor(Math.random() * 40) + 10}`);
 		if (data.status === 503 && !this.isInMaintenance) {
-			this.isInMaintenance = true;
+			this.isInMaintenance = Boolean(true);
 			this.emit('maintenanceStart');
 		} else if (data.status === 200 && this.isInMaintenance) {
-			this.isInMaintenance = false;
+			this.isInMaintenance = Boolean(false);
 			this.emit('maintenanceEnd');
 		}
 		setTimeout(this.checkMaintenace.bind(this), 0.5 * 60 * 1000);

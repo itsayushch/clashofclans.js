@@ -1,4 +1,4 @@
-import { fetchURL } from '../utils/utils';
+import { fetchURL, seasonEnd } from '../utils/utils';
 import qs from 'querystring';
 
 export class Client {
@@ -105,6 +105,23 @@ export class Client {
 
 	public warLeague(leagueId: number | string, filters?: FilterOptions) {
 		return this.get(`warleagues/${leagueId}`, filters);
+	}
+
+	public seasonInfo() {
+		const month = new Date().getMonth();
+		let start = seasonEnd(month);
+		let end = seasonEnd(month + 1);
+
+		if (end.getTime() <= Date.now()) {
+			start = end;
+			end = seasonEnd(month + 2);
+		}
+
+		return {
+			seasonEnd: end,
+			seasonStart: start,
+			seasonId: end.toISOString().substring(0, 7)
+		};
 	}
 
 	public get(path: string, options?: any) {
