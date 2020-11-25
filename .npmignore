@@ -8,3 +8,6 @@ package-lock.json
 .vs
 .vscode
 .github
+src/
+.all-contributorsrc
+dist/tsconfig.tsbuildinfo
