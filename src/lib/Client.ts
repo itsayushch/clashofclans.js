@@ -114,7 +114,7 @@ export class Client {
 
 		if (end.getTime() <= Date.now()) {
 			start = end;
-			end = seasonEnd(month + 1);
+			end = seasonEnd(month + 2);
 		}
 
 		return {
