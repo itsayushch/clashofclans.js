@@ -29,7 +29,8 @@ export async function fetchURL(url: string, token: string, timeout: number) {
 	});
 }
 
-export function seasonEnd(month: number, year = new Date().getFullYear()) {
+export function seasonEnd(month: number) {
+	const year = new Date().getFullYear();
 	let day = 0;
 	let lastDate = new Date(Date.UTC(year, month));
 	while (true) {
