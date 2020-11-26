@@ -1,5 +1,5 @@
 interface Clans {
-	items: [{
+	items: {
 		tag: string;
 		name: string;
 		type: string;
@@ -23,15 +23,15 @@ interface Clans {
 			name: string;
 		};
 		members: number;
-		labels: [{
+		labels: {
 			id: number;
 			name: string;
 			iconUrls: {
 				small: string;
 				medium: string;
 			};
-		}] | [];
-	}];
+		}[];
+	}[];
 	paging: {
 		cursors: {
 			after?: string;
@@ -63,7 +63,7 @@ interface Member {
 }
 
 interface Members {
-	items: [Member];
+	items: Member[];
 	paging: {
 		cursors: {
 			after?: string;
@@ -104,15 +104,15 @@ interface Clan {
 		id: number;
 	};
 	members: number;
-	labels: [{
+	labels: {
 		id: number;
 		name: string;
 		iconUrls?: {
 			small: string;
 			medium: string;
 		};
-	}] | [];
-	memberList: [Member] | [];
+	}[];
+	memberList: Member[];
 }
 
 interface Player {
@@ -152,7 +152,7 @@ interface Player {
 			medium: string;
 		};
 	};
-	achievements: [{
+	achievements: {
 		name: string;
 		stars: number;
 		value: number;
@@ -160,33 +160,33 @@ interface Player {
 		info: string;
 		completionInfo: string | null;
 		village: 'home' | 'builderBase';
-	}];
-	labels: [{
+	}[];
+	labels: {
 		id: number;
 		name: string;
 		iconUrls: {
 			small: string;
 			medium: string;
 		};
-	}] | [];
-	troops: [{
+	}[];
+	troops: {
 		name: string;
 		level: number;
 		maxLevel: number;
 		village: 'home' | 'builderBase';
-	}];
-	heroes: [{
+	}[];
+	heroes: {
 		name: string;
 		level: number;
 		maxLevel: number;
 		village: 'home' | 'builderBase';
-	}] | [];
-	spells: [{
+	}[];
+	spells: {
 		name: string;
 		level: number;
 		maxLevel: number;
 		village: 'home' | 'builderBase';
-	}] | [];
+	}[];
 }
 
 interface WarClan {
@@ -202,31 +202,27 @@ interface WarClan {
 	stars: number;
 	destructionPercentage: number;
 	expEarned?: number;
-	members: [
-		{
-			tag: string;
-			name: string;
-			mapPosition: number;
-			townhallLevel: number;
-			opponentAttacks: number;
-			bestOpponentAttack?: {
-				order: number;
-				attackerTag: string;
-				defenderTag: string;
-				stars: number;
-				destructionPercentage: number;
-			};
-			attacks?: [
-				{
-					order: number;
-					attackerTag: string;
-					defenderTag: string;
-					stars: number;
-					destructionPercentage: number;
-				}
-			];
-		}
-	];
+	members: {
+		tag: string;
+		name: string;
+		mapPosition: number;
+		townhallLevel: number;
+		opponentAttacks: number;
+		bestOpponentAttack?: {
+			order: number;
+			attackerTag: string;
+			defenderTag: string;
+			stars: number;
+			destructionPercentage: number;
+		};
+		attacks?: {
+			order: number;
+			attackerTag: string;
+			defenderTag: string;
+			stars: number;
+			destructionPercentage: number;
+		}[];
+	}[];
 }
 
 interface War {
@@ -242,7 +238,7 @@ interface War {
 interface CWL {
 	state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
 	season: string;
-	clans: [{
+	clans: {
 		name: string;
 		tag: string;
 		clanLevel: number;
@@ -251,13 +247,13 @@ interface CWL {
 			large: string;
 			medium: string;
 		};
-		members: [{
+		members: {
 			name: string;
 			tag: string;
 			townHallLevel: number;
-		}];
-	}];
-	rounds: [{
+		}[];
+	}[];
+	rounds: {
 		warTags: string[];
-	}];
+	}[];
 }
