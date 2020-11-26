@@ -110,6 +110,16 @@ export function handlePlayerUpdate(client: Events, player: Player) {
 	}
 }
 
+// @ts-ignore - no-unused-vars
+function previousBestAttack(clan: WarClan, defenderTag: string, attackerTag: string) { // eslint-disable-line
+	const attacks = clan.members.filter(mem => mem.attacks && mem.attacks.length)
+		.map(mem => mem.attacks)
+		.flat()
+		.filter(atk => atk!.defenderTag === defenderTag && atk!.attackerTag !== attackerTag)
+		.sort((a, b) => (b!.destructionPercentage ** b!.stars) - (a!.destructionPercentage ** a!.stars));
+	return attacks[0];
+}
+
 function isFreshAttack(clan: WarClan, defenderTag: string, order: number) {
 	const attacks = clan.members.filter(mem => mem.attacks && mem.attacks.length)
 		.map(mem => mem.attacks)
