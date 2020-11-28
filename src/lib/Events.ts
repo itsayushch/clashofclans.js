@@ -26,6 +26,12 @@ export class Events extends EventEmitter {
 	private isInMaintenance = Boolean(false);
 	private initialized = Boolean(false);
 
+	private loopBreak = {
+		player: Boolean(false),
+		clan: Boolean(false),
+		war: Boolean(false)
+	};
+
 	public constructor(options: EventsOption) {
 		super();
 
@@ -54,6 +60,7 @@ export class Events extends EventEmitter {
 	}
 
 	public clearPlayers() {
+		this.loopBreak.player = true;
 		this.players.clear();
 	}
 
@@ -74,6 +81,7 @@ export class Events extends EventEmitter {
 	}
 
 	public clearClans() {
+		this.loopBreak.clan = true;
 		this.clans.clear();
 	}
 
@@ -94,6 +102,7 @@ export class Events extends EventEmitter {
 	}
 
 	public clearWars() {
+		this.loopBreak.war = true;
 		this.wars.clear();
 	}
 
@@ -116,8 +125,13 @@ export class Events extends EventEmitter {
 		if (this.isInMaintenance) return;
 		const startTime = Date.now();
 		for (const tag of this.clans.keys()) {
+			if (this.loopBreak.clan) break;
 			const data = await this.fetch(`/clans/${encodeURIComponent(tag)}`);
 			handleClanUpdate(this, data);
+		}
+		if (this.loopBreak.clan) {
+			this.clans.clear();
+			this.loopBreak.clan = false;
 		}
 		const timeTaken = Date.now() - startTime;
 		const waitFor = (timeTaken >= this.refreshRate ? 0 : this.refreshRate - timeTaken);
@@ -128,8 +142,13 @@ export class Events extends EventEmitter {
 		if (this.isInMaintenance) return;
 		const startTime = Date.now();
 		for (const tag of this.players.keys()) {
+			if (this.loopBreak.player) break;
 			const data = await this.fetch(`/players/${encodeURIComponent(tag)}`);
 			handlePlayerUpdate(this, data);
+		}
+		if (this.loopBreak.player) {
+			this.players.clear();
+			this.loopBreak.player = false;
 		}
 		const timeTaken = Date.now() - startTime;
 		const waitFor = (timeTaken >= this.refreshRate ? 0 : this.refreshRate - timeTaken);
@@ -140,8 +159,13 @@ export class Events extends EventEmitter {
 		if (this.isInMaintenance) return;
 		const startTime = Date.now();
 		for (const tag of this.wars.keys()) {
+			if (this.loopBreak.war) break;
 			const data = await this.fetch(`/clans/${encodeURIComponent(tag)}/currentwar`);
 			handleWarUpdate(this, tag, data);
+		}
+		if (this.loopBreak.war) {
+			this.wars.clear();
+			this.loopBreak.war = false;
 		}
 		const timeTaken = Date.now() - startTime;
 		const waitFor = (timeTaken >= this.refreshRate ? 0 : this.refreshRate - timeTaken);
