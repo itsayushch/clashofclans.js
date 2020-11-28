@@ -127,7 +127,7 @@ export class Events extends EventEmitter {
 		for (const tag of this.clans.keys()) {
 			if (this.loopBreak.clan) break;
 			const data = await this.fetch(`/clans/${encodeURIComponent(tag)}`);
-			handleClanUpdate(this, data);
+			if (data.ok) handleClanUpdate(this, data);
 		}
 		if (this.loopBreak.clan) {
 			this.clans.clear();
@@ -144,7 +144,7 @@ export class Events extends EventEmitter {
 		for (const tag of this.players.keys()) {
 			if (this.loopBreak.player) break;
 			const data = await this.fetch(`/players/${encodeURIComponent(tag)}`);
-			handlePlayerUpdate(this, data);
+			if (data.ok) handlePlayerUpdate(this, data);
 		}
 		if (this.loopBreak.player) {
 			this.players.clear();
@@ -161,7 +161,7 @@ export class Events extends EventEmitter {
 		for (const tag of this.wars.keys()) {
 			if (this.loopBreak.war) break;
 			const data = await this.fetch(`/clans/${encodeURIComponent(tag)}/currentwar`);
-			handleWarUpdate(this, tag, data);
+			if (data.ok) handleWarUpdate(this, tag, data);
 		}
 		if (this.loopBreak.war) {
 			this.wars.clear();
