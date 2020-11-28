@@ -21,7 +21,8 @@ export async function fetchURL(url: string, token: string, timeout: number) {
 	const parsed = await res.json().catch(() => null);
 	if (!parsed) return { ok: false, status: res.status };
 
-	const MAX_AGE = Number(res.headers.get('cache-control')!.split('=')[1]);
+	const cacheControl = res.headers.get('cache-control');
+	const MAX_AGE = cacheControl ? Number(cacheControl!.split('=')[1]) : 0;
 	return Object.assign(parsed, {
 		maxAge: MAX_AGE,
 		status: res.status,
