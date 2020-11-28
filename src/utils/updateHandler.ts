@@ -21,9 +21,9 @@ export function handleClanUpdate(client: Events, clan: Clan) {
 		clan.name !== oldClan.name
 		|| clan.description !== oldClan.description
 		|| clan.type !== oldClan.type
-		|| clan.badgeUrls !== oldClan.badgeUrls
-		|| clan.location !== oldClan.location
-		|| clan.labels !== oldClan.labels
+		|| clan.badgeUrls.small !== oldClan.badgeUrls.small
+		|| !(clan.location && oldClan.location && clan.location.id === oldClan.location.id)
+		|| clan.labels.map(d => d.id).join() !== oldClan.labels.map(d => d.id).join()
 		|| clan.clanLevel !== oldClan.clanLevel
 		|| clan.clanPoints !== oldClan.clanPoints
 		|| clan.clanVersusPoints !== oldClan.clanVersusPoints
@@ -32,7 +32,7 @@ export function handleClanUpdate(client: Events, clan: Clan) {
 		|| clan.warWinStreak !== oldClan.warWinStreak
 		|| clan.warWins !== oldClan.warWins
 		|| clan.isWarLogPublic !== oldClan.isWarLogPublic
-		|| clan.warLeague !== oldClan.warLeague
+		|| !(clan.warLeague && oldClan.warLeague && clan.warLeague.id === oldClan.warLeague.id)
 		|| clan.members !== oldClan.members
 		|| (clan.isWarLogPublic && oldClan.isWarLogPublic && clan.warLosses !== oldClan.warLosses)
 		|| (clan.isWarLogPublic && oldClan.isWarLogPublic && clan.warTies !== oldClan.warTies)
@@ -47,7 +47,7 @@ export function handleClanUpdate(client: Events, clan: Clan) {
 			member.name !== oldMem.name
 			|| member.role !== oldMem.role
 			|| member.expLevel !== oldMem.expLevel
-			|| member.league !== oldMem.league
+			|| member.league.id !== oldMem.league.id
 			|| member.trophies !== oldMem.trophies
 			|| member.versusTrophies !== oldMem.versusTrophies
 			|| member.clanRank !== oldMem.clanRank
@@ -63,7 +63,7 @@ export function handleClanUpdate(client: Events, clan: Clan) {
 export function handlePlayerUpdate(client: Events, player: Player) {
 	const oldPlayer: Player = client.players.get(player.tag);
 	client.players.set(player.tag, player);
-	if (oldPlayer.hasOwnProperty('tag')) return;
+	if (!oldPlayer.hasOwnProperty('tag')) return;
 
 	const oldTroops = oldPlayer.troops;
 	for (const hero of oldPlayer.heroes) oldTroops.push(hero);
@@ -88,7 +88,7 @@ export function handlePlayerUpdate(client: Events, player: Player) {
 	if (
 		oldPlayer.name !== player.name
 		|| oldPlayer.townHallLevel !== player.townHallLevel
-		|| oldPlayer.townHallLevel !== player.townHallWeaponLevel
+		|| oldPlayer.townHallWeaponLevel !== player.townHallWeaponLevel
 		|| oldPlayer.builderHallLevel !== player.builderHallLevel
 		|| oldPlayer.expLevel !== player.expLevel
 		|| oldPlayer.trophies !== player.trophies
@@ -102,9 +102,9 @@ export function handlePlayerUpdate(client: Events, player: Player) {
 		|| oldPlayer.role !== player.role
 		|| oldPlayer.donations !== player.donations
 		|| oldPlayer.donationsReceived !== player.donationsReceived
-		|| (oldPlayer.clan ? player.clan ? oldPlayer.clan.tag === player.clan.tag : false : player.clan ? true : false)
-		|| oldPlayer.league !== player.league
-		|| oldPlayer.labels !== player.labels
+		|| !(oldPlayer.clan && player.clan && oldPlayer.clan.tag === player.clan.tag)
+		|| !(oldPlayer.league && player.league && oldPlayer.league.id === player.league.id)
+		|| oldPlayer.labels.map(d => d.id).join() !== player.labels.map(d => d.id).join()
 	) {
 		client.emit('playerUpdate', oldPlayer, player);
 	}
