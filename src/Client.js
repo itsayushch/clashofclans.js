@@ -128,7 +128,7 @@ class Client {
 	 * client.currentClanWar('#8QU8J9LP');
 	 * @returns {Promise<any>} Object
 	 */
-	async currentClanWar(clanTag, options) {
+	async currentWar(clanTag, options) {
 		const query = qs.stringify(options);
 		return this.fetch(`/clans/${this.parseTag(clanTag)}/currentwar?${query}`);
 	}
